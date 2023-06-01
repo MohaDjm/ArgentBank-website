@@ -22,10 +22,16 @@ html {
   
   .main {
     flex: 1;
+    height: 82vh; 
+    padding-top: 5rem;
   }
   
   .bg-dark {
     background-color: #12002b;
+  }
+
+.main-nav i {
+    margin: 7px;
   }
   
   .sr-only {
@@ -94,8 +100,8 @@ html {
     background-color: white;
     width: 300px;
     margin: 0 auto;
-    margin-top: 3rem;
     padding: 2rem;
+    
   }
   
   .sign-in-icon {
