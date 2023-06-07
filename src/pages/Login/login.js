@@ -1,32 +1,43 @@
 import React from 'react';
 import './login.css';
 import { useDispatch } from 'react-redux';
-import { login } from '../../redux/authSlice';
+import { useNavigate } from "react-router-dom";
 import Navbar from '../../components/Navbar/navbar';
 import SignInForm from '../../components/signInForm/signInForm';
 import Footer from '../../components/Footer/footer';
-import data from '../../data/users.json';
+import { setUserToken, setLoginInfos } from "../../redux/userSlice";
+import Axios from "axios";
 
-const Login = () => {
+function Login() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleLogin = (email, password) => {
-    const user = data.find(user => user.email === email && user.password === password);
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-    if (user) {
-      // Connexion réussie, dispatch de l'action de connexion
-      dispatch(login());
-    } else {
-      // Connexion échouée, afficher un message d'erreur ou effectuer une action appropriée
-      console.log("Email or password is incorrect");
-    }
+    const data = {
+      email: e.target[0].value,
+      password: e.target[1].value,
+    };
+
+    Axios.post("http://localhost:3001/api/v1/user/login", data)
+      .then((response) => {
+        dispatch(setLoginInfos(data));
+        dispatch(setUserToken(response.data.body.token));
+        console.log("Token:", response.data.body.token);
+        navigate("/profile");
+      })
+      .catch((error) => {
+        console.log(error);
+        console.error("Cet identifiant ou ce mot de passe est inconnu, veuillez réessayer.");
+      });
   };
 
   return (
     <div>
       <Navbar />
       <main className="main bg-dark">
-        <SignInForm onLogin={handleLogin} />
+        <SignInForm onLogin={handleSubmit} />
       </main>
       <Footer />
     </div>

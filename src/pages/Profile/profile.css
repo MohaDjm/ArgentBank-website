@@ -203,3 +203,15 @@ html {
       width: 200px;
     }
   }
+
+  .user-pseudo {
+    float: left;
+    line-height: 1rem; 
+  }
+  
+  .main-nav-item {
+    float: right;
+    text-align: right;
+    line-height: 3rem; 
+  }
+  

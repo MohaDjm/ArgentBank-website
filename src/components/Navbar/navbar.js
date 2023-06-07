@@ -1,16 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import argentBankLogo from '../../assets/argentBankLogo.png';
 
-function Nav() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // État de connexion, initialisé à false
-
-  // Fonction pour gérer la déconnexion
-  const handleLogout = () => {
-    // Logique de déconnexion, par exemple : setIsLoggedIn(false);
-    setIsLoggedIn(false);
-  };
-
+function Nav({ isLoggedIn, handleLogout, pseudo }) { // Ajoutez pseudo comme paramètre
   return (
     <nav className="main-nav">
       <Link to="/" className="main-nav-logo">
@@ -23,13 +15,14 @@ function Nav() {
       </Link>
       <div>
         {isLoggedIn ? (
-          // Afficher "Sign Out" lorsque l'utilisateur est connecté
-          <Link to="/logout" className="main-nav-item" onClick={handleLogout}>
-            <i className="fa fa-user-circle"></i>
-            Sign Out
-          </Link>
+          <div>
+            <p className="user-pseudo">{pseudo}</p> {/* Utilisez le prop pseudo pour afficher la valeur */}
+            <Link to="/login" className="main-nav-item" onClick={handleLogout}>
+              <i className="fa fa-user-circle"></i>
+              Sign Out
+            </Link>
+          </div>
         ) : (
-          // Afficher "Sign In" lorsque l'utilisateur n'est pas connecté
           <Link to="/login" className="main-nav-item">
             <i className="fa fa-user-circle"></i>
             Sign In

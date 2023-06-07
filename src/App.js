@@ -7,16 +7,21 @@ import Login from './pages/Login/login';
 import Profile from './pages/Profile/profile';
 // import NotFound from './pages/notFound/notFound';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import ProtectedRoutes from './components/ProtectedRoutes/protectedRoutes';
+
 
 const App = () => {
   return (
     <Provider store={store}>
       <Router>
         <Routes>
+          {/* public routes */}
           <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
           {/* <Route path="*" element={<NotFound />} /> */}
+          {/* protected routes */}
+          <Route element={<ProtectedRoutes />}></Route>
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </Router>
     </Provider>
