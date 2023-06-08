@@ -51,8 +51,8 @@ const Profile = () => {
 
   const handleChangeUserName = (e) => {
     e.preventDefault();
-    const newPseudo = e.target[0].value;
-    updateUserData(newPseudo);
+    // const newPseudo = e.target[0].value;
+    updateUserData(pseudo);
     setUpdatingName(!updatingName);
   };
   
@@ -69,8 +69,10 @@ const Profile = () => {
   
   const updateUserData = (pseudo) => {
     const userProfile = {
-      pseudo: pseudo,
+      userName: pseudo,
     };
+
+    console.log(userProfile);
   
     Axios.put("http://localhost:3001/api/v1/user/profile", userProfile, {
       headers: {
@@ -99,6 +101,7 @@ const Profile = () => {
               value={pseudo}
               className="inputUpdate"
               onChange={handleChange}
+              // onChange={setPseudo(e.target.value)}
             />
           </div>
           <div>

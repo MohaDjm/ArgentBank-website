@@ -1,27 +1,52 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom";
+import Axios from "axios";
 import { Link } from 'react-router-dom';
-import userData from '../../data/users.json';
+import { setUserToken, setLoginInfos } from "../../redux/userSlice";
+// import userData from '../../data/users.json';
 
 const SignInForm = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleSignIn = (e) => {
     e.preventDefault();
+    
 
     // Recherche de l'utilisateur correspondant aux informations de connexion
-    const user = userData.find(
-      (user) => user.email === username && user.password === password
-    );
+    // const user = userData.find(
+    //   (user) => user.email === username && user.password === password
+    // );
 
-    if (user) {
-      // Redirection vers la page de profil si les informations sont correctes
-      window.location.href = '/profile';
-    } else {
-      // Affichage d'un message d'erreur si les informations sont incorrectes
-      setErrorMessage('Invalid username or password');
-    }
+    const data = {
+      email: username,
+      password: password,
+    };
+    console.log(data);
+
+    Axios.post("http://localhost:3001/api/v1/user/login", data)
+      .then((response) => {
+        dispatch(setLoginInfos(data));
+        dispatch(setUserToken(response.data.body.token));
+        console.log("Token:", response.data.body.token);
+        navigate("/profile");
+      })
+      .catch((error) => {
+        console.log(error);
+        console.error("Cet identifiant ou ce mot de passe est inconnu, veuillez réessayer.");
+      });
+
+    // if (user) {
+    //   // Redirection vers la page de profil si les informations sont correctes
+    //   window.location.href = '/profile';
+    // } else {
+    //   // Affichage d'un message d'erreur si les informations sont incorrectes
+    //   setErrorMessage('Invalid username or password');
+    // }
   };
 
   return (
