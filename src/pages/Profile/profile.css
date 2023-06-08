@@ -215,3 +215,9 @@ html {
     line-height: 3rem; 
   }
   
+  .input-disabled {
+    background-color: #f5f5f5; 
+    color: #999999; 
+    cursor: not-allowed; 
+  }
+  

@@ -4,8 +4,8 @@ const initialState = {
   loginInfos: null,
   token: null,
   userProfile: {
-    firstName: null,
-    lastName: null,
+    firstName: "", 
+    lastName: "", 
   },
 };
 
@@ -26,10 +26,11 @@ const userSlice = createSlice({
       state.userProfile.lastName = action.payload;
     },
     setLogout: (state) => {
-      return initialState; 
+      return initialState;
     },
   },
 });
+
 
 export const {
   setLoginInfos,
@@ -39,5 +40,4 @@ export const {
   setLogout,
 } = userSlice.actions;
 
-export default userSlice; 
-
+export default userSlice;

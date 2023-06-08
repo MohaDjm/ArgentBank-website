@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setUserFirstName, setUserLastName, setLogout } from '../../redux/userSlice';
+import { setUserToken, setLogout } from '../../redux/userSlice';
 import Axios from 'axios';
 import Navbar from '../../components/Navbar/navbar';
 import Footer from '../../components/Footer/footer';
 import AccountSection from '../../components/AccountSection/accountSection';
+import { setUserFirstName, setUserLastName } from '../../redux/userSlice';
 import './profile.css';
 
 const Profile = () => {
   const loginInfos = useSelector((state) => state.user.loginInfos);
   const token = useSelector((state) => state.user.token);
+  const firstName = useSelector((state) => state.user.userProfile.firstName);
+  const lastName = useSelector((state) => state.user.userProfile.lastName);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [updatingName, setUpdatingName] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [pseudo, setPseudo] = useState("");
 
   useEffect(() => {
     getUserData();
   }, [token, loginInfos]);
-  
 
   const getUserData = () => {
     Axios.post("http://localhost:3001/api/v1/user/profile", loginInfos, {
@@ -32,16 +32,16 @@ const Profile = () => {
       },
     })
       .then((response) => {
-        setFirstName(response.data.body.firstName);
-        setLastName(response.data.body.lastName);
+        const { firstName, lastName } = response.data.body;
+        dispatch(setUserFirstName(firstName));
+        dispatch(setUserLastName(lastName));
         setPseudo(response.data.body.userName);
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.error("Token incorrect.");
         console.log(error);
       });
   };
-  
   
 
   const handleLogout = () => {
@@ -51,29 +51,20 @@ const Profile = () => {
 
   const handleChangeUserName = (e) => {
     e.preventDefault();
-    // const newPseudo = e.target[0].value;
     updateUserData(pseudo);
     setUpdatingName(!updatingName);
   };
-  
+
   const handleChange = (e) => {
-    const { id, value } = e.target;
-    if (id === "username") {
-      setPseudo(value);
-    } else if (id === "firstname") {
-      setFirstName(value);
-    } else if (id === "lastname") {
-      setLastName(value);
-    }
+    const { value } = e.target;
+    setPseudo(value);
   };
-  
+
   const updateUserData = (pseudo) => {
     const userProfile = {
       userName: pseudo,
     };
 
-    console.log(userProfile);
-  
     Axios.put("http://localhost:3001/api/v1/user/profile", userProfile, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -89,7 +80,7 @@ const Profile = () => {
         console.log(error);
       });
   };
-  
+
   const changeUsername = () => {
     return (
       <form onSubmit={handleChangeUserName}>
@@ -101,7 +92,6 @@ const Profile = () => {
               value={pseudo}
               className="inputUpdate"
               onChange={handleChange}
-              // onChange={setPseudo(e.target.value)}
             />
           </div>
           <div>
@@ -138,8 +128,6 @@ const Profile = () => {
       </form>
     );
   };
-  
-  
 
   return (
     <div>
@@ -148,11 +136,7 @@ const Profile = () => {
         <div className="header">
           <h1>
             Welcome back<br />
-            {updatingName ? (
-              <>{pseudo} !</>
-            ) : (
-              changeUsername()
-            )}
+            {updatingName ? <>{pseudo} !</> : changeUsername()}
           </h1>
           {updatingName ? (
             <button
