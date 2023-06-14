@@ -20,7 +20,9 @@ const Profile = () => {
   const [pseudo, setPseudo] = useState("");
 
   useEffect(() => {
-    getUserData();
+    if (!firstName || !lastName) {
+      getUserData();
+    }
   }, [token, loginInfos]);
 
   const getUserData = () => {
